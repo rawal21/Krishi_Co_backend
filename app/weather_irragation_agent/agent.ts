@@ -1,23 +1,28 @@
 import { CROP_WATER_THRESHOLD } from "./rules";
-import { getWeatherData } from "./weather_service";
+import { getWeatherData, WeatherData, DailyWeather } from "./weather_service";
 import type { agentDto } from "./dto";
-
-import type { WeatherData } from "./weather_service";
+import { getCoordinatesByPincode } from "../common/service/geo.service";
+import { getSoilInfo } from "../crop-planning-agent/soil/soil.api";
 
 export const irrigationAgent = async (input: agentDto, mockWeather?: WeatherData) => {
+  const { lat, lon } = await getCoordinatesByPincode(input.pincode);
+  const soil = await getSoilInfo(lat, lon);
   const weather = mockWeather ?? await getWeatherData(input.pincode);
 
   const last7DaysRain = weather.daily
-    .slice(0, 7) // Using 0-7 as a proxy for 'recent'
-    .reduce((sum, d) => sum + (d.rain || 0), 0);
+    .slice(0, 7)
+    .reduce((sum: number, d: DailyWeather) => sum + (d.rain || 0), 0);
 
-    
     const next5DaysRain = weather.daily
-    .slice(0, 5) // Proxy for 'future'
-    .reduce((sum, d) => sum + (d.rain || 0), 0);
+    .slice(0, 5)
+    .reduce((sum: number, d: DailyWeather) => sum + (d.rain || 0), 0);
 
-  const threshold =
-    CROP_WATER_THRESHOLD[input.cropType]?.[input.cropStage] ?? 20;
+  let threshold = CROP_WATER_THRESHOLD[input.cropType]?.[input.cropStage] ?? 20;
+
+  // Dynamic Adjustment based on Real Soil Type
+  if (soil.soilType === "deep_black") threshold -= 5; // Clay retains water
+  if (soil.soilType === "sandy") threshold += 10; // Sand dries quickly
+
 
   if (next5DaysRain >= 10) {
     return {

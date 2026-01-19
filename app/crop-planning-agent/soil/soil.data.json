@@ -1,0 +1,12 @@
+{
+  "MH-LAT-CHAKUR": {
+    "soilType": "medium_black",
+    "waterHolding": "high",
+    "source": "NBSS_LUP"
+  },
+  "MH-LAT-NILANGA": {
+    "soilType": "deep_black",
+    "waterHolding": "very_high",
+    "source": "NBSS_LUP"
+  }
+}
