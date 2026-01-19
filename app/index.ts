@@ -1,9 +1,11 @@
-import express, { Request, Response } from 'express';
 import { loadConfig } from './common/helper/config.helper';
+loadConfig();
+
+import express, { Request, Response } from 'express';
 import { irrigationAgent } from './weather_irragation_agent/agent';
 import { getWeatherData } from './weather_irragation_agent/weather_service';
 import { cropPlanningAgent } from './crop-planning-agent/agent/cropPlanning.agent';
-loadConfig();
+import { pestAgent } from './pest_agent/agent/pest.agent';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -54,6 +56,16 @@ app.post('/weather-data', async (req: Request, res: Response) => {
     res.json(result);
   } catch (error: any) {
     console.error("Weather Data Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/pest-agent', async (req: Request, res: Response) => {
+  try {
+    const result = await pestAgent(req.body);
+    res.json(result);
+  } catch (error: any) {
+    console.error("Pest Agent Error:", error.message);
     res.status(500).json({ error: error.message });
   }
 });
