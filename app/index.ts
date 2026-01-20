@@ -6,6 +6,8 @@ import { irrigationAgent } from './weather_irragation_agent/agent';
 import { getWeatherData } from './weather_irragation_agent/weather_service';
 import { cropPlanningAgent } from './crop-planning-agent/agent/cropPlanning.agent';
 import { pestAgent } from './pest_agent/agent/pest.agent';
+import { marketAgent } from './market_agent/agent/index';
+import { orchestratorAgent } from './orchestrator/agent/orchestrator.agent';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -66,6 +68,26 @@ app.post('/pest-agent', async (req: Request, res: Response) => {
     res.json(result);
   } catch (error: any) {
     console.error("Pest Agent Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/market-agent', async (req: Request, res: Response) => {
+  try {
+    const result = await marketAgent(req.body);
+    res.json(result);
+  } catch (error: any) {
+    console.error("Market Agent Error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/orchestrator', async (req: Request, res: Response) => {
+  try {
+    const result = await orchestratorAgent(req.body);
+    res.json(result);
+  } catch (error: any) {
+    console.error("Orchestrator Error:", error.message);
     res.status(500).json({ error: error.message });
   }
 });

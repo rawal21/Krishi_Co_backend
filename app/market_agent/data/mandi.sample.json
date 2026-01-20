@@ -1,0 +1,26 @@
+[
+  {
+    "date": "2026-10-01",
+    "mandi": "Latur",
+    "modalPrice": 7200,
+    "arrivalQtls": 340
+  },
+  {
+    "date": "2026-10-01",
+    "mandi": "Nanded",
+    "modalPrice": 7350,
+    "arrivalQtls": 280
+  },
+  {
+    "date": "2026-09-30",
+    "mandi": "Latur",
+    "modalPrice": 7100,
+    "arrivalQtls": 410
+  },
+  {
+    "date": "2026-09-30",
+    "mandi": "Nanded",
+    "modalPrice": 7300,
+    "arrivalQtls": 300
+  }
+]
