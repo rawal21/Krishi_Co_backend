@@ -8,11 +8,15 @@ import { cropPlanningAgent } from './crop-planning-agent/agent/cropPlanning.agen
 import { pestAgent } from './pest_agent/agent/pest.agent';
 import { marketAgent } from './market_agent/agent/index';
 import { orchestratorAgent } from './orchestrator/agent/orchestrator.agent';
+import { handleIncomingMessage } from './orchestrator/dispatcher';
+import twilio from 'twilio';
+const MessagingResponse = twilio.twiml.MessagingResponse;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // For Twilio Webhooks
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, Express with TypeScript!');
@@ -90,6 +94,21 @@ app.post('/orchestrator', async (req: Request, res: Response) => {
     console.error("Orchestrator Error:", error.message);
     res.status(500).json({ error: error.message });
   }
+});
+
+app.post('/whatsapp', async (req: Request, res: Response) => {
+  const twiml = new MessagingResponse();
+  const incomingMsg = req.body.Body || ""; // Handle empty body safely
+
+  try {
+    const responseText = await handleIncomingMessage(incomingMsg);
+    twiml.message(responseText);
+  } catch (error) {
+    console.error("WhatsApp Error:", error);
+    twiml.message("Sorry, I am facing technical difficulties. Please try later.");
+  }
+
+  res.type('text/xml').send(twiml.toString());
 });
 
 app.listen(PORT,  () => {
