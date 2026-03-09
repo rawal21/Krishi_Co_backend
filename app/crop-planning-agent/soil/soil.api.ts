@@ -13,7 +13,7 @@ export const getSoilInfo = async (lat: number, lon: number): Promise<SoilPropert
   const url = `https://rest.isric.org/soilgrids/v2.0/properties/query?lat=${lat}&lon=${lon}&property=clay&property=sand&property=soc&depth=0-5cm&depth=5-15cm&value=mean`;
 
   try {
-    const response = await axios.get(url);
+    const response = await axios.get(url, { timeout: 5000 });
     const properties = response.data.properties.layers;
 
     const clay = properties.find((l: any) => l.name === 'clay')?.depths[0]?.values?.mean / 10 || 0;
@@ -32,8 +32,14 @@ export const getSoilInfo = async (lat: number, lon: number): Promise<SoilPropert
       sandContent: sand,
       organicCarbon: soc
     };
-  } catch (error) {
-    console.error("SoilGrids API Error:", error);
+  } catch (error: any) {
+    const status = error.response?.status;
+    if (status === 503 || error.code === 'ECONNABORTED') {
+      console.warn(`[Soil API] Service unavailable (${status || 'TIMEOUT'}). Using default loamy soil.`);
+    } else {
+      console.error("[Soil API] Unexpected error:", error.message);
+    }
+
     // Fallback to a safe default
     return {
       soilType: "loamy",

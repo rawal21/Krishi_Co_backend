@@ -4,11 +4,14 @@ import { analyzePestWithHF } from "../../common/service/llm_hf.service";
 
 export async function pestAgent(input: PestInput): Promise<PestOutput> {
   let weather = input.weather;
+  console.log("input testing " , input);
+  console.log("westher details in pestAgent" , input.weather)
 
   // Dynamic Weather Integration
   if (input.pincode && !weather) {
     try {
       const realWeather = await getCurrentWeather(input.pincode);
+      console.log("realWeather", realWeather);
       weather = {
         humidityAvg: realWeather.humidity,
         temperatureAvg: realWeather.temp

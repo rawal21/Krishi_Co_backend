@@ -2,7 +2,7 @@ import { generateWithAI } from "../../common/service/llm.generic";
 import { SchemaType } from "@google/generative-ai";
 
 export interface RouterOutput {
-  targetAgent: "MARKET" | "PEST" | "WEATHER" | "CROP_PLANNING" | "GENERAL" | "UNKNOWN";
+  targetAgent: "MARKET" | "PEST" | "WEATHER" | "CROP_PLANNING" | "SCHEME" | "GENERAL" | "UNKNOWN";
   parameters: any;
   missingParameters: string[];
   reasoning: string;
@@ -15,29 +15,31 @@ Your goal is to analyze the user's message and decide which specific expert agen
 Available Agents:
 1. MARKET:
    - Use for: Crop prices, mandi rates, selling advice, market trends.
-   - Required Parameters: 'crop' (e.g., onion, wheat), 'pincode' (optional but preferred), 'state' (optional).
+   - Required Parameters: 'crop' (e.g., onion, wheat).
 
 2. PEST:
    - Use for: Plant diseases, bug attacks, symptoms, pest control advice.
-   - Required Parameters: 'crop', 'symptomsText' (description of the problem). 
-   - Note: If user sends an image description, extract it.
+   - Required Parameters: 'crop', 'symptomsText'.
 
 3. WEATHER:
    - Use for: Rain forecast, irrigation advice, temperature, humidty.
-   - Required Parameters: 'pincode', 'cropType' (optional), 'cropStage' (optional), 'last_irrigation_days_ago' (optional).
+   - Required Parameters: 'pincode'.
 
 4. CROP_PLANNING:
    - Use for: Deciding what to plant, soil suitability, seasonal planning.
-   - Required Parameters: 'landAcres', 'pincode' (for soil/weather lookup), 'irrigation' (boolean).
+   - Required Parameters: 'landAcres', 'pincode'.
 
-5. GENERAL:
-   - Use for: Greetings, generic questions, or when the user doesn't fit a specific category.
+5. SCHEME:
+   - Use for: Government schemes, yojanas, subsidies, financial help, PM-Kisan, insurance.
+   - Required Parameters: 'pincode'.
+
+6. GENERAL:
+   - Use for: Greetings, generic questions.
 
 Instructions:
 - Extract all relevant parameters from the user's text.
-- If a required parameter is missing for the chosen agent, list it in 'missingParameters'.
-- If the user provides a location name instead of a pincode, try to infer it or keep it as 'locationName'.
-- Default 'pincode' to '452001' (Indore) ONLY if the user asks for exemplary data or purely testing, otherwise leave null.
+- If a required parameter is missing, list it in 'missingParameters'.
+- Default 'pincode' to '452001' (Indore) ONLY for testing purposes.
 
 Output JSON only.
 `;
@@ -48,7 +50,7 @@ const ROUTER_SCHEMA = {
   properties: {
     targetAgent: {
       type: SchemaType.STRING,
-      enum: ["MARKET", "PEST", "WEATHER", "CROP_PLANNING", "GENERAL", "UNKNOWN"],
+      enum: ["MARKET", "PEST", "WEATHER", "CROP_PLANNING", "SCHEME", "GENERAL", "UNKNOWN"],
     },
     parameters: {
       type: SchemaType.OBJECT,

@@ -65,11 +65,14 @@ export async function getMandiPricesFromAPI(
       timeout: 15000,
     });
 
+    console.log(`[Mandi API] Status: ${response.status} | URL: ${response.config.url} | Records: ${response.data?.records?.length || 0}`);
+
     const records = response.data.records || [];
 
-    // Filter by requested mandis and transform to our format
+    // Filter by requested mandis (if provided) and transform to our format
     const filteredRecords: MandiPriceRecord[] = records
       .filter((r) => {
+        if (!mandis || mandis.length === 0) return true; // THE FIX: If no mandis specified, show all
         const marketLower = r.market.toLowerCase();
         return mandis.some((m) => marketLower.includes(m.toLowerCase()));
       })
@@ -84,6 +87,8 @@ export async function getMandiPricesFromAPI(
         district: r.district,
         variety: r.variety,
       }));
+
+      console.log("filtered records" , filteredRecords);
 
     if (filteredRecords.length === 0) {
       console.warn(`No mandi records found for ${commodity} in ${mandis.join(", ")}`);

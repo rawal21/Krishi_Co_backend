@@ -15,6 +15,7 @@ export async function getRecentMandiPrices(
     try {
       console.log(`[Mandi] Fetching real prices for ${commodity} from ${mandis.join(", ")}`);
       const records = await getMandiPricesFromAPI(commodity, mandis, state);
+      console.log("records in the agent" , records);
       if (records.length > 0) {
         return records;
       }

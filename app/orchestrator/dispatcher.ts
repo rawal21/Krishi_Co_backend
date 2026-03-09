@@ -3,6 +3,7 @@ import { marketAgent } from "../market_agent/agent/index";
 import { pestAgent } from "../pest_agent/agent/pest.agent";
 import { irrigationAgent } from "../weather_irragation_agent/agent";
 import { cropPlanningAgent } from "../crop-planning-agent/agent/cropPlanning.agent";
+import { schemeAgent } from "../scheme_agent/agent/scheme.agent";
 import { generateWithAI } from "../common/service/llm.generic";
 import { SchemaType } from "@google/generative-ai";
 
@@ -19,6 +20,7 @@ async function humanizeResponse(agentName: string, data: any): Promise<string> {
     - Use emojis 🌾🚜
     - Keep it concise but informative.
     - If it's a warning, make it clear!
+    - For SCHEMES: Clearly list eligibility and application steps.
     - Use Hindi/English mix (Hinglish) if appropriate, or simple English.
   `;
   
@@ -33,6 +35,7 @@ async function humanizeResponse(agentName: string, data: any): Promise<string> {
 
   try {
     const result = await generateWithAI(systemPrompt, JSON.stringify(data), schema);
+    console.log("[Dispatcher] Humanized result:", result);
     return result.message;
   } catch (error) {
     return JSON.stringify(data, null, 2); // Fallback
@@ -50,7 +53,7 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
     // 2. Check for missing parameters
     if (decision.missingParameters && decision.missingParameters.length > 0) {
       if (decision.targetAgent !== "GENERAL") {
-         return `I can help with ${decision.targetAgent}, but I need more details: ${decision.missingParameters.join(", ")}.`;
+         return `I can help with ${decision.targetAgent}, but I need your pincode to find relevant local/state schemes for you.`;
       }
     }
 
@@ -70,6 +73,7 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
               latestDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
             }
         });
+        console.log("[Dispatcher] market result" , result);
         break;
 
       case "PEST":
@@ -79,6 +83,7 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
             symptomsText: decision.parameters.symptomsText || userMessage,
             pincode: decision.parameters.pincode
         });
+        console.log("[Dispatcher] Pest result:", result);
         break;
 
       case "WEATHER":
@@ -104,13 +109,19 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
             season: "Rabi",
             budgetLevel: "medium" // Changed from budget: 50000 to budgetLevel
         });
+        console.log("[Dispatcher] Crop Planning result:", result);
+        break;
+
+      case "SCHEME":
+        result = await schemeAgent(userMessage, decision.parameters.pincode);
+        console.log("[Dispatcher] Scheme result:", result);
         break;
 
       case "GENERAL":
-        return "Namaste! I am Krisi Co, your AI Farm Assistant. I can help with Market Prices 💰, Pest Control 🐛, Weather 🌦️, and Crop Planning 🌱. What allows me to help you today?";
+        return "Namaste! I am Krisi Co, your AI Farm Assistant. I can help with Market Prices 💰, Pest Control 🐛, Weather 🌦️, Crop Planning 🌱, and Government Schemes 🏛️. What allows me to help you today?";
 
       default:
-        return "I am sorry, I did not understand that. Could you ask about market prices, weather, tests, or crops?";
+        return "I am sorry, I did not understand that. Could you ask about market prices, weather, schemes, or crops?";
     }
 
     // 4. Humanize the output
@@ -121,3 +132,4 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
     return "Sorry, I encountered an error processing your request. Please try again.";
   }
 };
+
