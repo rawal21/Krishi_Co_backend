@@ -96,18 +96,46 @@ app.post('/orchestrator', async (req: Request, res: Response) => {
   }
 });
 
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
 app.post('/whatsapp', async (req: Request, res: Response) => {
+  const from = req.body.From; // Farmer's number
+  const to = process.env.TWILIO_WHATSAPP_NUMBER; // Your sandbox number
+  const incomingMsg = req.body.Body || ""; 
+
+  console.log(`[Server] Received /whatsapp request from: ${from}`);
+  
+  // Return an empty TwiML immediately or eventually
   const twiml = new MessagingResponse();
-  const incomingMsg = req.body.Body || ""; // Handle empty body safely
 
   try {
+    // 1. Process the message (can take > 15 seconds)
     const responseText = await handleIncomingMessage(incomingMsg);
-    twiml.message(responseText);
-  } catch (error) {
+    
+    // 2. Send via Twilio API instead of Webhook Response
+    console.log(`[Server] Sending direct WhatsApp message to ${from}...`);
+    await client.messages.create({
+      body: responseText,
+      from: to,
+      to: from
+    });
+    console.log("[Server] Message sent successfully via API.");
+
+  } catch (error: any) {
     console.error("WhatsApp Error:", error);
-    twiml.message("Sorry, I am facing technical difficulties. Please try later.");
+    // If it fails, we can try to send a quick error message
+    try {
+        await client.messages.create({
+            body: "Sorry, I am facing technical difficulties. Please try later.",
+            from: to,
+            to: from
+        });
+    } catch (e) {
+        console.error("Failed to send error message:", e);
+    }
   }
 
+  // We return empty TwiML because we already sent the message via API
   res.type('text/xml').send(twiml.toString());
 });
 

@@ -53,7 +53,9 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
     // 2. Check for missing parameters
     if (decision.missingParameters && decision.missingParameters.length > 0) {
       if (decision.targetAgent !== "GENERAL") {
-         return `I can help with ${decision.targetAgent}, but I need your pincode to find relevant local/state schemes for you.`;
+         const msg = `I can help with your ${decision.targetAgent} request, but I need your pincode (e.g., 444001) to provide accurate local information.`;
+         console.log(`[Dispatcher] Missing parameters. Returning: "${msg}"`);
+         return msg;
       }
     }
 
@@ -118,14 +120,19 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
         break;
 
       case "GENERAL":
-        return "Namaste! I am Krisi Co, your AI Farm Assistant. I can help with Market Prices 💰, Pest Control 🐛, Weather 🌦️, Crop Planning 🌱, and Government Schemes 🏛️. What allows me to help you today?";
+        const generalMsg = "Namaste! I am Krisi Co, your AI Farm Assistant. I can help with Market Prices 💰, Pest Control 🐛, Weather 🌦️, Crop Planning 🌱, and Government Schemes 🏛️. What allows me to help you today?";
+        console.log(`[Dispatcher] GENERAL response: "${generalMsg}"`);
+        return generalMsg;
 
       default:
+        console.log(`[Dispatcher] UNKNOWN response.`);
         return "I am sorry, I did not understand that. Could you ask about market prices, weather, schemes, or crops?";
     }
 
     // 4. Humanize the output
-    return await humanizeResponse(decision.targetAgent, result);
+    const finalResponse = await humanizeResponse(decision.targetAgent, result);
+    console.log(`[Dispatcher] Final Humanized Response: "${finalResponse.substring(0, 50)}..."`);
+    return finalResponse;
 
   } catch (error: any) {
     console.error("Dispatcher Error:", error);
