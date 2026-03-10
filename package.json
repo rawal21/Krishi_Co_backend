@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist/index.js",
-    "dev": "nodemon app/index.ts",
+    "dev": "nodemon --ignore user_profiles.json app/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,16 +17,20 @@
     "@google/generative-ai": "^0.24.1",
     "@huggingface/inference": "^4.13.9",
     "axios": "^1.13.2",
+    "cors": "^2.8.6",
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "express-async-handler": "^1.2.0",
     "groq-sdk": "^0.37.0",
     "http-error": "^0.0.6",
-    "twilio": "^5.11.2"
+    "twilio": "^5.11.2",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.9",
+    "@types/winston": "^2.4.4",
     "nodemon": "^3.1.11",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"

@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  /* Agricultural Color Palette */
+  --color-primary: #15803d;
+  /* Deep Green */
+  --color-primary-light: #22c55e;
+  --color-primary-dark: #166534;
+  --color-accent: #eab308;
+  /* Gold/Corn Yellow */
+  --color-accent-light: #fef08a;
+  --color-earth: #78350f;
+  /* Soil Brown */
+  --color-leaf: #4ade80;
+  /* Fresh Leaf */
+
+  --color-background: #f8fafc;
+  --color-foreground: #0f172a;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+}
+
+@utility bg-grid {
+  background-image: linear-gradient(to right, #e2e8f0 1px, transparent 1px),
+    linear-gradient(to bottom, #e2e8f0 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+@utility btn-primary {
+  @apply bg-primary hover:bg-primary-light text-white px-6 py-2 rounded-xl transition-all font-semibold shadow-lg shadow-green-100 active:scale-95;
+}
+
+@utility card-premium {
+  @apply bg-white border border-slate-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow p-6;
+}
+
+@utility glass {
+  @apply bg-white/70 backdrop-blur-md border border-white/20;
+}

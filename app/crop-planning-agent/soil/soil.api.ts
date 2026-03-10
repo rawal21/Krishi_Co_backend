@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../../common/helper/logger.helper';
 
 export interface SoilProperties {
   soilType: string;
@@ -35,9 +36,9 @@ export const getSoilInfo = async (lat: number, lon: number): Promise<SoilPropert
   } catch (error: any) {
     const status = error.response?.status;
     if (status === 503 || error.code === 'ECONNABORTED') {
-      console.warn(`[Soil API] Service unavailable (${status || 'TIMEOUT'}). Using default loamy soil.`);
+      logger.warn(`Soil API service unavailable (${status || 'TIMEOUT'}). Using default loamy soil.`);
     } else {
-      console.error("[Soil API] Unexpected error:", error.message);
+      logger.error(`Soil API Unexpected error: ${error.message}`);
     }
 
     // Fallback to a safe default

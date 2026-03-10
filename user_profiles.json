@@ -1,0 +1,49 @@
+{
+  "whatsapp:+911234567890": {
+    "userId": "whatsapp:+911234567890",
+    "name": "Dikshit",
+    "location": "Rajasthan"
+  },
+  "whatsapp:+918426014388": {
+    "userId": "whatsapp:+918426014388",
+    "name": "Ramesh",
+    "location": "Vadodara (391760)",
+    "pincode": "391760"
+  },
+  "web-1773173786872": {
+    "userId": "web-1773173786872",
+    "name": "Dikshit kumar ",
+    "location": "Vadodara (391761)",
+    "pincode": "391761"
+  },
+  "web-1773173822856": {
+    "userId": "web-1773173822856",
+    "name": "Dikshit kumar ",
+    "location": "Vadodara (391761)",
+    "pincode": "391761"
+  },
+  "web-1773174083158": {
+    "userId": "web-1773174083158",
+    "name": "Dikshit kumar ",
+    "location": "Vadodara (391760)",
+    "pincode": "391760"
+  },
+  "web-1773174151953": {
+    "userId": "web-1773174151953",
+    "name": "Dikshit kumar ",
+    "location": "Vadodara (391760)",
+    "pincode": "391760"
+  },
+  "web-1773174979759": {
+    "userId": "web-1773174979759",
+    "name": "Dikshit kumar ",
+    "location": "Vadodara (391760)",
+    "pincode": "391760"
+  },
+  "web-1773175369885": {
+    "userId": "web-1773175369885",
+    "name": "Ramesh",
+    "location": "Vadodara (391760)",
+    "pincode": "391760"
+  }
+}

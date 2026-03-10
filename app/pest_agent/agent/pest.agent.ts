@@ -1,23 +1,23 @@
 import { PestInput, PestOutput } from "../types/pest.types";
 import { getCurrentWeather } from "../../common/service/weather.api";
 import { analyzePestWithHF } from "../../common/service/llm_hf.service";
+import logger from "../../common/helper/logger.helper";
 
 export async function pestAgent(input: PestInput): Promise<PestOutput> {
   let weather = input.weather;
-  console.log("input testing " , input);
-  console.log("westher details in pestAgent" , input.weather)
+  logger.debug(`Pest Agent input: ${JSON.stringify(input)}`);
 
   // Dynamic Weather Integration
   if (input.pincode && !weather) {
     try {
       const realWeather = await getCurrentWeather(input.pincode);
-      console.log("realWeather", realWeather);
+      logger.debug(`Fetched weather: ${JSON.stringify(realWeather)}`);
       weather = {
         humidityAvg: realWeather.humidity,
         temperatureAvg: realWeather.temp
       };
     } catch (error) {
-      console.warn("Failed to fetch dynamic weather for pest agent");
+      logger.warn(`Failed to fetch dynamic weather for pest agent at ${input.pincode}`);
     }
   }
 
@@ -54,9 +54,10 @@ export async function pestAgent(input: PestInput): Promise<PestOutput> {
 
   try {
     const diagnosis = await analyzePestWithHF(prompt, input.image);
+    logger.info("Pest Agent diagnosis complete.");
     return diagnosis as PestOutput;
   } catch (error: any) {
-    console.error("HF AI Error:", error.message);
+    logger.error(`HF AI Error: ${error.message}`);
     return {
       pestDetected: null,
       confidence: 0,

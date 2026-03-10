@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import Groq from "groq-sdk";
 import createError from "http-errors";
+import logger from "../helper/logger.helper";
 
 /**
  * Generic function to call an LLM (Gemini or Groq) with a prompt and a response schema.
@@ -13,8 +14,10 @@ export const generateWithAI = async (
   const provider = process.env.LLM_PROVIDER || "GROQ"; // Default to GROQ now
 
   if (provider === "GROQ") {
+    logger.debug("Using GROQ provider");
     return await generateWithGroq(systemInstruction, userPrompt, schema);
   } else {
+    logger.debug("Using GEMINI provider");
     return await generateWithGemini(systemInstruction, userPrompt, schema);
   }
 };
@@ -41,8 +44,9 @@ async function generateWithGroq(systemInstruction: string, userPrompt: string, s
     const content = response.choices[0].message.content || "{}";
     return JSON.parse(content);
   } catch (error: any) {
-    console.error("Groq Error:", error);
+    logger.error(`Groq Error: ${error.message}`);
     // If Groq fails, try Gemini as a final fallback
+    logger.info("Falling back to Gemini...");
     return await generateWithGemini(systemInstruction, userPrompt, schema);
   }
 }
@@ -68,7 +72,7 @@ async function generateWithGemini(systemInstruction: string, userPrompt: string,
     const result = await model.generateContent(userPrompt);
     return JSON.parse(result.response.text());
   } catch (error: any) {
-    console.error("Gemini Error:", error);
+    logger.error(`Gemini Error: ${error.message}`);
     throw createError(500, "All AI providers failed");
   }
 }

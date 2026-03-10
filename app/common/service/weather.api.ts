@@ -1,5 +1,6 @@
 import axios from 'axios';
 import createError from 'http-errors';
+import logger from '../helper/logger.helper';
 import { getCoordinatesByPincode } from './geo.service';
 
 export interface CurrentWeather {
@@ -22,7 +23,7 @@ export const getCurrentWeather = async (pincode: number): Promise<CurrentWeather
       humidity: response.data.main.humidity
     };
   } catch (error: any) {
-    console.error("Weather API Error:", error.message);
+    logger.error(`Weather API Error at pincode ${pincode}: ${error.message}`);
     throw createError(error.response?.status || 500, error.message);
   }
 };

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import logger from '../../common/helper/logger.helper';
 
 export interface ClimateInfo {
   avgMonthlyRainfall: number;
@@ -23,8 +24,8 @@ export const getClimateInfo = async (lat: number, lon: number): Promise<ClimateI
       avgMonthlyRainfall: avgMonthlyRain,
       isAridZone: avgMonthlyRain < 50
     };
-  } catch (error) {
-    console.error("Climate API Error:", error);
+  } catch (error: any) {
+    logger.error(`Climate API Error: ${error.message}`);
     return {
       avgMonthlyRainfall: 100, // Safe default
       isAridZone: false
