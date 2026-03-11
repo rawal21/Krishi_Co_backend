@@ -4,24 +4,34 @@ import { pestAgent } from "../pest_agent/agent/pest.agent";
 import { irrigationAgent } from "../weather_irragation_agent/agent";
 import { cropPlanningAgent } from "../crop-planning-agent/agent/cropPlanning.agent";
 import { schemeAgent } from "../scheme_agent/agent/scheme.agent";
+import { generalAgent } from "./agent/general.agent";
 import { generateWithAI } from "../common/service/llm.generic";
 import { SchemaType } from "@google/generative-ai";
+import logger from "../common/helper/logger.helper";
+import { getProfile, updateProfile, UserProfile } from "../common/service/profile.service";
 
 /**
  * The Humanizer: Converts raw JSON agent outputs into friendly WhatsApp messages.
  */
-async function humanizeResponse(agentName: string, data: any): Promise<string> {
+async function humanizeResponse(agentName: string, data: any, profile: UserProfile): Promise<string> {
+  const contextText = profile.name || profile.location 
+    ? `\nUser Context: Name is ${profile.name || "Unknown"}, Location is ${profile.location || "Unknown"}. Use this to personalize the message.`
+    : "\nUser context is unknown. If the user hasn't introduced themselves, you can briefly mention that you'd love to know their name or location to help them better.";
+
   const systemPrompt = `
     You are a friendly agricultural assistant "Krisi Co".
     You have received raw data from the ${agentName} system.
     Convert this into a helpful, easy-to-read WhatsApp message for an Indian farmer.
+    ${contextText}
     
     Rules:
     - Use emojis 🌾🚜
     - Keep it concise but informative.
     - If it's a warning, make it clear!
+    - If the user asks for a language change, acknowledge it and switch to that language.
     - For SCHEMES: Clearly list eligibility and application steps.
     - Use Hindi/English mix (Hinglish) if appropriate, or simple English.
+    - Always reply in the same language as the user.
   `;
   
   const schema = {
@@ -35,26 +45,59 @@ async function humanizeResponse(agentName: string, data: any): Promise<string> {
 
   try {
     const result = await generateWithAI(systemPrompt, JSON.stringify(data), schema);
-    console.log("[Dispatcher] Humanized result:", result);
+    logger.debug(`Humanized result: ${JSON.stringify(result)}`);
     return result.message;
   } catch (error) {
     return JSON.stringify(data, null, 2); // Fallback
   }
 }
 
-export const handleIncomingMessage = async (userMessage: string): Promise<string> => {
+export const handleIncomingMessage = async (userMessage: string, userId: string = "default"): Promise<string> => {
   try {
-    console.log(`[Dispatcher] Received: "${userMessage}"`);
+    logger.info(`Received: "${userMessage}" from ${userId}`);
+    
+    // --- Web Application Handshake ---
+    if (userMessage.startsWith("LINK_WEB_ACCOUNT_")) {
+      const webUserId = userMessage.replace("LINK_WEB_ACCOUNT_", "").trim();
+     logger.warn("info",webUserId)
+      const webProfile = getProfile(webUserId);
+      
+      if (webProfile.name) {
+        updateProfile(userId, { 
+          name: webProfile.name, 
+          location: webProfile.location, 
+          pincode: webProfile.pincode 
+        });
+        logger.info(`Successfully linked web account for ${webProfile.name} to WhatsApp number ${userId}`);
+        return `Namaste ${webProfile.name}! 🎉 Your web account has been successfully linked. I see you are from ${webProfile.location}. How can I help you with your farming today?`;
+      } else {
+        logger.warn(`Failed to link account, profile not found for ID: ${webUserId}`);
+        return "I tried to link your web dashboard, but your profile seems to be empty. Please complete the setup on the website first.";
+      }
+    }
+    // --- End Handshake ---
+
+    const profile = getProfile(userId);
 
     // 1. Route the message
     const decision = await routerAgent(userMessage);
-    console.log(`[Dispatcher] Routed to: ${decision.targetAgent}`);
+    logger.info(`Routed to: ${decision.targetAgent}`);
 
-    // 2. Check for missing parameters
+    // 2. Check for missing parameters against profile
     if (decision.missingParameters && decision.missingParameters.length > 0) {
-      if (decision.targetAgent !== "GENERAL") {
-         const msg = `I can help with your ${decision.targetAgent} request, but I need your pincode (e.g., 444001) to provide accurate local information.`;
-         console.log(`[Dispatcher] Missing parameters. Returning: "${msg}"`);
+      // Try to backfill from profile
+      const stillMissing: string[] = [];
+      for (const param of decision.missingParameters) {
+        if (param === 'pincode' && profile.pincode) {
+           decision.parameters.pincode = profile.pincode;
+        } else {
+           stillMissing.push(param);
+        }
+      }
+
+      if (stillMissing.length > 0 && decision.targetAgent !== "GENERAL") {
+         const msg = `I can help with your ${decision.targetAgent} request, but I need your ${stillMissing.join(', ')} (e.g., 444001) to provide accurate local information.`;
+         logger.warn(`Missing parameters: ${stillMissing.join(', ')}`);
          return msg;
       }
     }
@@ -75,7 +118,7 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
               latestDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
             }
         });
-        console.log("[Dispatcher] market result" , result);
+        logger.info("Market Agent call complete.");
         break;
 
       case "PEST":
@@ -85,7 +128,7 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
             symptomsText: decision.parameters.symptomsText || userMessage,
             pincode: decision.parameters.pincode
         });
-        console.log("[Dispatcher] Pest result:", result);
+        logger.info("Pest Agent call complete.");
         break;
 
       case "WEATHER":
@@ -96,7 +139,7 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
             cropStage: decision.parameters.cropStage || "growth",
             last_irrigation_days_ago: decision.parameters.last_irrigation_days_ago || 5
         });
-        console.log("[Dispatcher] Weather result:", result);
+        logger.info("Weather/Irrigation Agent call complete.");
         break;
 
       case "CROP_PLANNING":
@@ -111,31 +154,49 @@ export const handleIncomingMessage = async (userMessage: string): Promise<string
             season: "Rabi",
             budgetLevel: "medium" // Changed from budget: 50000 to budgetLevel
         });
-        console.log("[Dispatcher] Crop Planning result:", result);
+        logger.info("Crop Planning Agent call complete.");
         break;
 
       case "SCHEME":
         result = await schemeAgent(userMessage, decision.parameters.pincode);
-        console.log("[Dispatcher] Scheme result:", result);
+        logger.info(`Scheme Agent call complete.`);
         break;
 
       case "GENERAL":
-        const generalMsg = "Namaste! I am Krisi Co, your AI Farm Assistant. I can help with Market Prices 💰, Pest Control 🐛, Weather 🌦️, Crop Planning 🌱, and Government Schemes 🏛️. What allows me to help you today?";
-        console.log(`[Dispatcher] GENERAL response: "${generalMsg}"`);
-        return generalMsg;
+        result = await generalAgent(userMessage, profile);
+        logger.info(`General Agent Result: ${JSON.stringify(result)}`);
+        
+        // Update profile if AI detected new info (simple heuristic for now)
+        // In a more complex app, the router/general agent would return structured updates
+        if (userMessage.toLowerCase().includes("i am") || userMessage.toLowerCase().includes("mera naam")) {
+            const nameMatch = userMessage.match(/(?:i am|my name is|mera naam|main hoon)\s+([a-zA-Z]+)/i);
+            if (nameMatch) updateProfile(userId, { name: nameMatch[1] });
+        }
+        if (userMessage.toLowerCase().includes("from") || userMessage.toLowerCase().includes("rehne wala")) {
+             const locMatch = userMessage.match(/(?:from|in|rehne wala|rajasthan|maharashtra)\s+([a-zA-Z]+)/i);
+             if (locMatch) updateProfile(userId, { location: locMatch[1] });
+        }
+        break;
 
       default:
-        console.log(`[Dispatcher] UNKNOWN response.`);
+        logger.warn(`UNKNOWN intent for message: "${userMessage}"`);
         return "I am sorry, I did not understand that. Could you ask about market prices, weather, schemes, or crops?";
     }
 
     // 4. Humanize the output
-    const finalResponse = await humanizeResponse(decision.targetAgent, result);
-    console.log(`[Dispatcher] Final Humanized Response: "${finalResponse.substring(0, 50)}..."`);
-    return finalResponse;
+    if(decision.targetAgent=== "GENERAL"){
+      logger.info(`Final Response (General): ${result.message}`);
+      return result.message;
+    }
+    else
+    {
+      const finalResponse = await humanizeResponse(decision.targetAgent, result, profile);
+      logger.info(`Final Response : ${JSON.stringify(finalResponse)}`);
+      return finalResponse;
+    }
 
   } catch (error: any) {
-    console.error("Dispatcher Error:", error);
+    logger.error(`Dispatcher Error: ${error.message}`);
     return "Sorry, I encountered an error processing your request. Please try again.";
   }
 };

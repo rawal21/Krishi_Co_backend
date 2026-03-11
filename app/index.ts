@@ -10,11 +10,23 @@ import { marketAgent } from './market_agent/agent/index';
 import { orchestratorAgent } from './orchestrator/agent/orchestrator.agent';
 import { handleIncomingMessage } from './orchestrator/dispatcher';
 import twilio from 'twilio';
+import logger from './common/helper/logger.helper';
+import cors from 'cors';
+import { getProfile, updateProfile } from './common/service/profile.service';
+import { getRecentMandiPrices } from './market_agent/services/mandi.service';
+import { getCurrentWeather } from './common/service/weather.api';
+
 const MessagingResponse = twilio.twiml.MessagingResponse;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(cors({
+  origin: ['http://localhost:3001', 'http://localhost:3000'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // For Twilio Webhooks
 
@@ -28,18 +40,18 @@ app.post('/test/irrigation-agent', async (req: Request, res: Response) => {
     const result = await irrigationAgent(input, mockWeather);
     res.json(result);
   } catch (error: any) {
-    console.error("Test Error:", error.message);
+    logger.error(`Test Error: ${error.message}`);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
 app.post('/irrigation-agent', async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
+    logger.http(`Irrigation Agent Request: ${JSON.stringify(req.body)}`);
     const result = await irrigationAgent(req.body);
     res.json(result);
   } catch (error: any) {
-    console.error("Agent Error:", error.message, error.response?.data);
+    logger.error(`Agent Error: ${error.message}`);
     res.status(500).json({ error: "Internal server error" });
   }
 });
@@ -50,7 +62,7 @@ app.post('/crop-planning-agent', async (req: Request, res: Response) => {
     const result = await cropPlanningAgent(req.body);
     res.json(result);
   } catch (error: any) {
-    console.error("Crop Planning Error:", error.message);
+    logger.error(`Crop Planning Error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -61,7 +73,7 @@ app.post('/weather-data', async (req: Request, res: Response) => {
     const result = await getWeatherData(pincode);
     res.json(result);
   } catch (error: any) {
-    console.error("Weather Data Error:", error.message);
+    logger.error(`Weather Data Error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -71,7 +83,7 @@ app.post('/pest-agent', async (req: Request, res: Response) => {
     const result = await pestAgent(req.body);
     res.json(result);
   } catch (error: any) {
-    console.error("Pest Agent Error:", error.message);
+    logger.error(`Pest Agent Error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -81,7 +93,7 @@ app.post('/market-agent', async (req: Request, res: Response) => {
     const result = await marketAgent(req.body);
     res.json(result);
   } catch (error: any) {
-    console.error("Market Agent Error:", error.message);
+    logger.error(`Market Agent Error: ${error.message}`);
     res.status(500).json({ error: error.message });
   }
 });
@@ -91,39 +103,70 @@ app.post('/orchestrator', async (req: Request, res: Response) => {
     const result = await orchestratorAgent(req.body);
     res.json(result);
   } catch (error: any) {
-    console.error("Orchestrator Error:", error.message);
+    logger.error(`Orchestrator Error: ${error.message}`);
+    res.status(500).json({ error: error.message });
+  }
+});
+// --- Web App REST Endpoints ---
+
+app.get('/api/weather/:pincode', async (req: Request, res: Response) => {
+  try {
+    const pc = req.params.pincode;
+    if (!pc) return res.status(400).json({ error: "Pincode required" });
+    const data = await getCurrentWeather(parseInt(pc as string));
+    res.json(data);
+  } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
 });
 
+app.get('/api/market/prices', async (req: Request, res: Response) => {
+  try {
+    const crop = req.query.crop as string;
+    const mandisString = req.query.mandis as string;
+    const mandiList = mandisString ? mandisString.split(',') : [];
+    const data = await getRecentMandiPrices(crop, mandiList);
+    res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/api/profile/:userId', (req: Request, res: Response) => {
+  res.json(getProfile(req.params.userId as string));
+});
+
+app.post('/api/profile', (req: Request, res: Response) => {
+  const { userId, updates } = req.body;
+  res.json(updateProfile(userId as string, updates));
+});
+
+// --- End Web App REST Endpoints ---
+
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 app.post('/whatsapp', async (req: Request, res: Response) => {
-  const from = req.body.From; // Farmer's number
-  const to = process.env.TWILIO_WHATSAPP_NUMBER; // Your sandbox number
+  const from = req.body.From; 
+  const to = process.env.TWILIO_WHATSAPP_NUMBER; 
   const incomingMsg = req.body.Body || ""; 
 
-  console.log(`[Server] Received /whatsapp request from: ${from}`);
+  logger.info(`Received /whatsapp request from: ${from}`);
   
-  // Return an empty TwiML immediately or eventually
   const twiml = new MessagingResponse();
 
   try {
-    // 1. Process the message (can take > 15 seconds)
-    const responseText = await handleIncomingMessage(incomingMsg);
+    const responseText = await handleIncomingMessage(incomingMsg, from);
     
-    // 2. Send via Twilio API instead of Webhook Response
-    console.log(`[Server] Sending direct WhatsApp message to ${from}...`);
+    logger.info(`Sending direct WhatsApp message to ${from}...`);
     await client.messages.create({
       body: responseText,
       from: to,
       to: from
     });
-    console.log("[Server] Message sent successfully via API.");
+    logger.info(`Message sent successfully via API.`);
 
   } catch (error: any) {
-    console.error("WhatsApp Error:", error);
-    // If it fails, we can try to send a quick error message
+    logger.error(`WhatsApp Error: ${error.message}`);
     try {
         await client.messages.create({
             body: "Sorry, I am facing technical difficulties. Please try later.",
@@ -131,14 +174,13 @@ app.post('/whatsapp', async (req: Request, res: Response) => {
             to: from
         });
     } catch (e) {
-        console.error("Failed to send error message:", e);
+        logger.error(`Failed to send error message: ${e}`);
     }
   }
 
-  // We return empty TwiML because we already sent the message via API
   res.type('text/xml').send(twiml.toString());
 });
 
 app.listen(PORT,  () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  logger.info(`Server is running on http://localhost:${PORT}`);
 });

@@ -5,20 +5,20 @@ import {
 } from "../types/market.types";
 import { getRecentMandiPrices } from "../services/mandi.service";
 import { analyzeTrend } from "../logic/trend.logic";
+import logger from "../../common/helper/logger.helper";
 
 export async function marketAgent(
   input: MarketInput
 ): Promise<MarketOutput> {
   // Fetch mandi prices (real API or mock fallback)
-  console.log("input testing " , input);
+  logger.debug(`Market Agent input: ${JSON.stringify(input)}`);
   const records = await getRecentMandiPrices(
     input.crop,
     input.nearbyMandis,
     input.state
   );
 
-  console.log("records in dispetch and then agent" , records);
-  console.log("reocords length " , records.length)
+  logger.debug(`Fetched ${records.length} records for market analysis.`);
 
   
 
@@ -112,6 +112,7 @@ export async function marketAgent(
     };
   }
 
+  logger.info("Market Agent analysis complete.");
   return {
     recommendation: "SELL_IN_OTHER_MANDI",
     suggestedMandi: best.mandi,

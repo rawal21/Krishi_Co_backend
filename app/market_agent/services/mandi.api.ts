@@ -1,6 +1,7 @@
 import axios from "axios";
 import createError from "http-errors";
 import { MandiPriceRecord } from "../types/market.types";
+import logger from "../../common/helper/logger.helper";
 
 /**
  * Fetches real-time mandi prices from data.gov.in API
@@ -65,7 +66,7 @@ export async function getMandiPricesFromAPI(
       timeout: 15000,
     });
 
-    console.log(`[Mandi API] Status: ${response.status} | URL: ${response.config.url} | Records: ${response.data?.records?.length || 0}`);
+    logger.http(`Mandi API Response: ${response.status} from ${response.config.url} | Count: ${response.data?.records?.length || 0}`);
 
     const records = response.data.records || [];
 
@@ -88,10 +89,10 @@ export async function getMandiPricesFromAPI(
         variety: r.variety,
       }));
 
-      console.log("filtered records" , filteredRecords);
+    logger.debug(`Filtered to ${filteredRecords.length} specific records.`);
 
     if (filteredRecords.length === 0) {
-      console.warn(`No mandi records found for ${commodity} in ${mandis.join(", ")}`);
+      logger.warn(`No mandi records found for ${commodity} in ${mandis.join(", ")}`);
     }
 
     return filteredRecords;
@@ -99,7 +100,7 @@ export async function getMandiPricesFromAPI(
     if (error.response?.status === 401) {
       throw createError(401, "Invalid DATA_GOV_API_KEY. Please check your API key.");
     }
-    console.error("Mandi API Error:", error.message);
+    logger.error(`Mandi API Error: ${error.message}`);
     throw createError(error.response?.status || 500, "Failed to fetch mandi prices: " + error.message);
   }
 }
@@ -129,5 +130,6 @@ export function getMockMandiPrices(mandis: string[]): MandiPriceRecord[] {
     { date: "2026-09-30", mandi: "Nanded", modalPrice: 7300, arrivalQtls: 300 },
   ];
   
+  if (!mandis || mandis.length === 0) return mockData;
   return mockData.filter((r) => mandis.includes(r.mandi));
 }

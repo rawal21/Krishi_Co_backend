@@ -1,5 +1,6 @@
 import axios from "axios";
 import createError from "http-errors";
+import logger from "../helper/logger.helper";
 
 export const analyzePestWithHF = async (
   prompt: string,
@@ -58,7 +59,8 @@ export const analyzePestWithHF = async (
     }
   } catch (error: any) {
     const errorData = error.response?.data;
-    console.error("HF Error Data:", JSON.stringify(errorData, null, 2));
+    logger.error(`HuggingFace Response Error: ${error.message}`);
+    logger.debug(`HF Error Data: ${JSON.stringify(errorData)}`);
     const errorMessage = errorData?.error || errorData?.message || error.message;
     throw createError(error.response?.status || 500, "HF Inference Failed: " + errorMessage);
   }
