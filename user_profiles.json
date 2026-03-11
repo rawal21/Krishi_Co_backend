@@ -6,8 +6,8 @@
   },
   "whatsapp:+918426014388": {
     "userId": "whatsapp:+918426014388",
-    "name": "Ramesh",
-    "location": "Vadodara (391760)",
+    "name": "dikshit",
+    "location": "Vadodara",
     "pincode": "391760"
   },
   "web-1773173786872": {
@@ -43,6 +43,12 @@
   "web-1773175369885": {
     "userId": "web-1773175369885",
     "name": "Ramesh",
+    "location": "Vadodara (391760)",
+    "pincode": "391760"
+  },
+  "web-1773227779511": {
+    "userId": "web-1773227779511",
+    "name": "Dikshit kumar ",
     "location": "Vadodara (391760)",
     "pincode": "391760"
   }

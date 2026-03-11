@@ -15,6 +15,8 @@ import cors from 'cors';
 import { getProfile, updateProfile } from './common/service/profile.service';
 import { getRecentMandiPrices } from './market_agent/services/mandi.service';
 import { getCurrentWeather } from './common/service/weather.api';
+import { downloadTwilioMedia, transcribeAudio } from './common/service/stt.service';
+import { generateAndUploadTTS } from './common/service/tts.service';
 
 const MessagingResponse = twilio.twiml.MessagingResponse;
 
@@ -27,8 +29,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // For Twilio Webhooks
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' })); // For Twilio Webhooks
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello, Express with TypeScript!');
@@ -148,20 +150,57 @@ const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TO
 app.post('/whatsapp', async (req: Request, res: Response) => {
   const from = req.body.From; 
   const to = process.env.TWILIO_WHATSAPP_NUMBER; 
-  const incomingMsg = req.body.Body || ""; 
+  let incomingMsg = req.body.Body || ""; 
+  logger.info(`Incoming message: ${incomingMsg}`);
+  
+  const numMedia = parseInt(req.body.NumMedia || '0');
+  logger.info(`Number of media files: ${numMedia}`);
+  const mediaContentType = req.body.MediaContentType0 || "";
+  logger.info(`Media content type: ${mediaContentType}`);
+  const mediaUrl = req.body.MediaUrl0 || "";
+  logger.info(`Media URL: ${mediaUrl}`);
+  
+  let isAudioInteraction = false;
+  logger.info(`Incoming message: ${incomingMsg}`);
 
   logger.info(`Received /whatsapp request from: ${from}`);
+  logger.debug(`Raw Twilio Payload: ${JSON.stringify(req.body)}`);
   
   const twiml = new MessagingResponse();
+  // logger.info(`Twilio Payload: ${JSON.stringify(req.body)}`);
 
   try {
+    // 1. Handle Incoming Audio (STT)
+    if (numMedia > 0 && mediaContentType.startsWith('audio/')) {
+        logger.info(`Incoming audio message detected. Downloading...`);
+        isAudioInteraction = true;
+        const audioBuffer = await downloadTwilioMedia(mediaUrl);
+        logger.info(`Transcribing audio...`);
+        incomingMsg = await transcribeAudio(audioBuffer);
+        logger.info(`Transcribed audio: ${incomingMsg}`);
+    }
+
+    if (!incomingMsg.trim()) {
+        throw new Error("Could not understand the message or transcription failed.");
+    }
+
+    // 2. Standard Routing & Processing
     const responseText = await handleIncomingMessage(incomingMsg, from);
     
+    // 3. Handle Outgoing Audio (TTS)
+    let outgoingMediaUrl: string | undefined = undefined;
+    if (isAudioInteraction) {
+        logger.info(`Generating audio response for TTS...`);
+        outgoingMediaUrl = await generateAndUploadTTS(responseText);
+    }
+
+    // 4. Send the WhatsApp Message
     logger.info(`Sending direct WhatsApp message to ${from}...`);
     await client.messages.create({
       body: responseText,
       from: to,
-      to: from
+      to: from,
+      ...(outgoingMediaUrl && { mediaUrl: [outgoingMediaUrl] })
     });
     logger.info(`Message sent successfully via API.`);
 
