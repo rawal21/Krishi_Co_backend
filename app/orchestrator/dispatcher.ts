@@ -14,8 +14,8 @@ import { getProfile, updateProfile, UserProfile } from "../common/service/profil
  * The Humanizer: Converts raw JSON agent outputs into friendly WhatsApp messages.
  */
 async function humanizeResponse(agentName: string, data: any, profile: UserProfile): Promise<string> {
-  const contextText = profile.name || profile.location 
-    ? `\nUser Context: Name is ${profile.name || "Unknown"}, Location is ${profile.location || "Unknown"}. Use this to personalize the message.`
+  const contextText = profile.name || profile.locationName 
+    ? `\nUser Context: Name is ${profile.name || "Unknown"}, Location is ${profile.locationName || "Unknown"}. Use this to personalize the message.`
     : "\nUser context is unknown. If the user hasn't introduced themselves, you can briefly mention that you'd love to know their name or location to help them better.";
 
   const systemPrompt = `
@@ -66,10 +66,11 @@ export const handleIncomingMessage = async (userMessage: string, userId: string 
         updateProfile(userId, { 
           name: webProfile.name, 
           location: webProfile.location, 
+          locationName: webProfile.locationName,
           pincode: webProfile.pincode 
         });
         logger.info(`Successfully linked web account for ${webProfile.name} to WhatsApp number ${userId}`);
-        return `Namaste ${webProfile.name}! 🎉 Your web account has been successfully linked. I see you are from ${webProfile.location}. How can I help you with your farming today?`;
+        return `Namaste ${webProfile.name}! 🎉 Your web account has been successfully linked. I see you are from ${webProfile.locationName || "your saved location"}. How can I help you with your farming today?`;
       } else {
         logger.warn(`Failed to link account, profile not found for ID: ${webUserId}`);
         return "I tried to link your web dashboard, but your profile seems to be empty. Please complete the setup on the website first.";
@@ -90,6 +91,8 @@ export const handleIncomingMessage = async (userMessage: string, userId: string 
       for (const param of decision.missingParameters) {
         if (param === 'pincode' && profile.pincode) {
            decision.parameters.pincode = profile.pincode;
+        } else if ((param === 'state' || param === 'location') && (profile.locationName || profile.location)) {
+           decision.parameters.state = profile.locationName || "Your Region";
         } else {
            stillMissing.push(param);
         }
@@ -109,7 +112,7 @@ export const handleIncomingMessage = async (userMessage: string, userId: string 
         result = await marketAgent({
             crop: decision.parameters.crop,
             nearbyMandis: [], 
-            state: decision.parameters.state || "Maharashtra", 
+            state: decision.parameters.state || profile.locationName || "Maharashtra", 
             transportCostPerQuintal: 50, 
             storageAvailable: true,
             quantityQuintal: 10,
@@ -118,7 +121,7 @@ export const handleIncomingMessage = async (userMessage: string, userId: string 
               latestDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
             }
         });
-        logger.info("Market Agent call complete.");
+        logger.info(`Market Agent call complete. State used: ${decision.parameters.state || profile.locationName || 'Maharashtra'}`);
         break;
 
       case "PEST":
@@ -174,7 +177,7 @@ export const handleIncomingMessage = async (userMessage: string, userId: string 
         }
         if (userMessage.toLowerCase().includes("from") || userMessage.toLowerCase().includes("rehne wala")) {
              const locMatch = userMessage.match(/(?:from|in|rehne wala|rajasthan|maharashtra)\s+([a-zA-Z]+)/i);
-             if (locMatch) updateProfile(userId, { location: locMatch[1] });
+             if (locMatch) updateProfile(userId, { locationName: locMatch[1] });
         }
         break;
 

@@ -8,7 +8,7 @@ export interface CurrentWeather {
   humidity: number;
 }
 
-export const getCurrentWeather = async (pincode: number): Promise<CurrentWeather> => {
+export const getCurrentWeather = async (pincode: number ): Promise<CurrentWeather> => {
   const Api_key = process.env.OPENWEATHER_API_KEY;
   if (!Api_key) throw createError(500, "OpenWeather API Key is missing");
 

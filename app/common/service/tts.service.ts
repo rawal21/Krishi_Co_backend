@@ -19,7 +19,10 @@ export const generateAndUploadTTS = async (text: string): Promise<string> => {
         // 2. Download all TTS buffers into Memory and concatenate
         const buffers: Buffer[] = [];
         for (const urlObj of audioUrls) {
-            const response = await axios.get(urlObj.url, { responseType: 'arraybuffer' });
+            const response = await axios.get(urlObj.url, { 
+                responseType: 'arraybuffer',
+                timeout: 30000 
+            });
             buffers.push(Buffer.from(response.data));
         }
         const combinedBuffer = Buffer.concat(buffers);

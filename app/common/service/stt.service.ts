@@ -10,6 +10,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
  * Downloads a media file from Twilio into a Buffer using Basic Auth
  */
 export const downloadTwilioMedia = async (mediaUrl: string): Promise<Buffer> => {
+  logger.info(`Downloading media from Twilio: ${mediaUrl}`);
   try {
     const authHeaders = {
       Authorization: `Basic ${Buffer.from(
@@ -20,9 +21,10 @@ export const downloadTwilioMedia = async (mediaUrl: string): Promise<Buffer> => 
     const response = await axios.get(mediaUrl, {
       responseType: 'arraybuffer',
       headers: authHeaders,
+      timeout: 30000, // 30 second timeout
     });
 
-    logger.info(`Downloaded media from Twilio: ${response.data}`);
+    logger.info(`Downloaded media from Twilio (${response.data.byteLength} bytes)`);
 
     return Buffer.from(response.data);
   } catch (error: any) {

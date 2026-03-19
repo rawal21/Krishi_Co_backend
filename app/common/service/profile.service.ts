@@ -7,9 +7,12 @@ const PROFILES_FILE = path.join(process.cwd(), 'user_profiles.json');
 export interface UserProfile {
   userId: string;
   name?: string;
-  location?: string;
+  location?: { lat: number; lon: number };
+  locationName?: string;
   pincode?: string;
-  preferredLanguage?: string;
+  AnnualIncome?: number;
+  irrigationType?: string;
+  MainCrop?: string[] | string;
 }
 
 export const getProfile = (userId: string): UserProfile => {

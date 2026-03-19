@@ -16,13 +16,15 @@ Available Agents:
 1. MARKET:
    - Use for: Crop prices, mandi rates, selling advice, market trends.
    - Required Parameters: 'crop' (e.g., onion, wheat).
+   - Optional Parameters: 'state' (if the user mentions their location/state, extract it).
+   - DO NOT list 'pincode' or 'state' as missing for MARKET queries. Only 'crop' is required.
 
 2. PEST:
    - Use for: Plant diseases, bug attacks, symptoms, pest control advice.
    - Required Parameters: 'crop', 'symptomsText'.
 
 3. WEATHER:
-   - Use for: Rain forecast, irrigation advice, temperature, humidty.
+   - Use for: Rain forecast, irrigation advice, temperature, humidity.
    - Required Parameters: 'pincode'.
 
 4. CROP_PLANNING:
