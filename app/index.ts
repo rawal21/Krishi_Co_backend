@@ -19,7 +19,7 @@ import { getCurrentWeather } from './common/service/weather.api';
 const MessagingResponse = twilio.twiml.MessagingResponse;
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT =  5050;
 
 app.use(cors({
   origin: ['http://localhost:3001', 'http://localhost:3000'],
@@ -143,44 +143,45 @@ app.post('/api/profile', (req: Request, res: Response) => {
 
 // --- End Web App REST Endpoints ---
 
+function sanitizeWhatsAppNumber(num: string): string {
+  if (!num) return num;
+  let formatted = num.trim();
+  if (formatted.startsWith('whatsapp:')) {
+    const part = formatted.substring('whatsapp:'.length).trim();
+    const withPlus = part.startsWith('+') ? part : '+' + part;
+    return `whatsapp:${withPlus}`;
+  }
+  const withPlus = formatted.startsWith('+') ? formatted : '+' + formatted;
+  return `whatsapp:${withPlus}`;
+}
+
 const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 app.post('/whatsapp', async (req: Request, res: Response) => {
-  const from = req.body.From; 
+  const rawFrom = req.body.From || "";
+  const from = sanitizeWhatsAppNumber(rawFrom);
   const to = process.env.TWILIO_WHATSAPP_NUMBER; 
   const incomingMsg = req.body.Body || ""; 
 
-  logger.info(`Received /whatsapp request from: ${from}`);
+  logger.info(`Received /whatsapp request from: ${from} (raw: ${rawFrom})`);
   
   const twiml = new MessagingResponse();
 
   try {
     const responseText = await handleIncomingMessage(incomingMsg, from);
     
-    logger.info(`Sending direct WhatsApp message to ${from}...`);
-    await client.messages.create({
-      body: responseText,
-      from: to,
-      to: from
-    });
-    logger.info(`Message sent successfully via API.`);
+    logger.info(`Replying via TwiML to ${from}...`);
+    twiml.message(responseText);
+    logger.info(`Message prepared successfully.`);
 
   } catch (error: any) {
     logger.error(`WhatsApp Error: ${error.message}`);
-    try {
-        await client.messages.create({
-            body: "Sorry, I am facing technical difficulties. Please try later.",
-            from: to,
-            to: from
-        });
-    } catch (e) {
-        logger.error(`Failed to send error message: ${e}`);
-    }
+    twiml.message("Sorry, I am facing technical difficulties. Please try later.");
   }
 
   res.type('text/xml').send(twiml.toString());
 });
 
-app.listen(PORT,  () => {
-  logger.info(`Server is running on http://localhost:${PORT}`);
+app.listen(5050,  () => {
+  logger.info(`Server is running on http://localhost:${5050}`);
 });

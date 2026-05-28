@@ -17,7 +17,10 @@ export const getProfile = (userId: string): UserProfile => {
     if (!fs.existsSync(PROFILES_FILE)) {
       return { userId };
     }
-    const data = fs.readFileSync(PROFILES_FILE, 'utf-8');
+    const data = fs.readFileSync(PROFILES_FILE, 'utf-8').trim();
+    if (!data) {
+      return { userId };
+    }
     const profiles = JSON.parse(data);
     return profiles[userId] || { userId };
   } catch (error) {
@@ -30,8 +33,10 @@ export const updateProfile = (userId: string, updates: Partial<UserProfile>): Us
   try {
     let profiles: Record<string, UserProfile> = {};
     if (fs.existsSync(PROFILES_FILE)) {
-      const data = fs.readFileSync(PROFILES_FILE, 'utf-8');
-      profiles = JSON.parse(data);
+      const data = fs.readFileSync(PROFILES_FILE, 'utf-8').trim();
+      if (data) {
+        profiles = JSON.parse(data);
+      }
     }
 
     const current = profiles[userId] || { userId };

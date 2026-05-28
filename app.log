@@ -1,0 +1,155 @@
+2026-05-05 01:11:39 [32minfo[39m: [32mfilepath[39m
+2026-05-05 01:11:39 [32minfo[39m: [32mLoading config from: /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-05 01:11:39 [32minfo[39m: [32mSuccessfully loaded /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-05 01:11:39 [32minfo[39m: [32mServer is running on http://localhost:5050[39m
+2026-05-05 01:11:49 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp: 14155551234[39m
+2026-05-05 01:11:49 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1777923089076" from whatsapp: 14155551234[39m
+2026-05-05 01:11:49 [33mwarn[39m: [33minfo[39m
+2026-05-05 01:11:49 [32minfo[39m: [32mProfile updated for whatsapp: 14155551234: {"name":"dikshit kumar","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-05 01:11:49 [32minfo[39m: [32mSuccessfully linked web account for dikshit kumar to WhatsApp number whatsapp: 14155551234[39m
+2026-05-05 01:11:49 [32minfo[39m: [32mSending direct WhatsApp message to whatsapp: 14155551234...[39m
+2026-05-05 01:11:49 [31merror[39m: [31mWhatsApp Error: The 'To' number whatsapp: 14155551234 is not a valid phone number.[39m
+2026-05-05 01:11:49 [31merror[39m: [31mFailed to send error message: Error: The 'To' number whatsapp: 14155551234 is not a valid phone number.[39m
+2026-05-05 01:12:33 [32minfo[39m: [32mfilepath[39m
+2026-05-05 01:12:33 [32minfo[39m: [32mLoading config from: /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-05 01:12:33 [32minfo[39m: [32mSuccessfully loaded /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-05 01:12:33 [32minfo[39m: [32mServer is running on http://localhost:5050[39m
+2026-05-05 01:12:59 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp: 14155551234[39m
+2026-05-05 01:12:59 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1777923089076" from whatsapp: 14155551234[39m
+2026-05-05 01:12:59 [33mwarn[39m: [33minfo[39m
+2026-05-05 01:12:59 [32minfo[39m: [32mProfile updated for whatsapp: 14155551234: {"name":"dikshit kumar","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-05 01:12:59 [32minfo[39m: [32mSuccessfully linked web account for dikshit kumar to WhatsApp number whatsapp: 14155551234[39m
+2026-05-05 01:12:59 [32minfo[39m: [32mReplying via TwiML to whatsapp: 14155551234...[39m
+2026-05-05 01:12:59 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-05 01:14:02 [32minfo[39m: [32mProfile updated for web-1777923842560: {"name":"Dikshit Rawal","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:17:55 [32minfo[39m: [32mfilepath[39m
+2026-05-18 10:17:55 [32minfo[39m: [32mLoading config from: /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-18 10:17:55 [32minfo[39m: [32mSuccessfully loaded /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-18 10:17:55 [32minfo[39m: [32mServer is running on http://localhost:5050[39m
+2026-05-18 10:18:53 [32minfo[39m: [32mProfile updated for web-1779079733844: {"name":"Dikshit Rawal","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:33:07 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp: 918426014388[39m
+2026-05-18 10:33:07 [32minfo[39m: [32mReceived: "Hi, I am a farmer." from whatsapp: 918426014388[39m
+2026-05-18 10:33:07 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:33:09 [32minfo[39m: [32mRouted to: GENERAL[39m
+2026-05-18 10:33:09 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:33:09 [32minfo[39m: [32mGeneral Agent Result: {"message":"Hello! Nice to meet you. I'm Krisi Co, a farm assistant. Where are you from, and how can I help you with your farming needs today?"}[39m
+2026-05-18 10:33:09 [32minfo[39m: [32mProfile updated for whatsapp: 918426014388: {"name":"a"}[39m
+2026-05-18 10:33:09 [32minfo[39m: [32mFinal Response (General): Hello! Nice to meet you. I'm Krisi Co, a farm assistant. Where are you from, and how can I help you with your farming needs today?[39m
+2026-05-18 10:33:09 [32minfo[39m: [32mReplying via TwiML to whatsapp: 918426014388...[39m
+2026-05-18 10:33:09 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:33:14 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp: 918426014388[39m
+2026-05-18 10:33:14 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1779079733844" from whatsapp: 918426014388[39m
+2026-05-18 10:33:14 [33mwarn[39m: [33minfo[39m
+2026-05-18 10:33:14 [32minfo[39m: [32mProfile updated for whatsapp: 918426014388: {"name":"Dikshit Rawal","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:33:14 [32minfo[39m: [32mSuccessfully linked web account for Dikshit Rawal to WhatsApp number whatsapp: 918426014388[39m
+2026-05-18 10:33:14 [32minfo[39m: [32mReplying via TwiML to whatsapp: 918426014388...[39m
+2026-05-18 10:33:14 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:34:58 [32minfo[39m: [32mfilepath[39m
+2026-05-18 10:34:58 [32minfo[39m: [32mLoading config from: /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-18 10:34:58 [32minfo[39m: [32mSuccessfully loaded /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-18 10:34:58 [32minfo[39m: [32mServer is running on http://localhost:5050[39m
+2026-05-18 10:35:31 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp: 918426014388)[39m
+2026-05-18 10:35:31 [32minfo[39m: [32mReceived: "What is the price of onions?" from whatsapp:+918426014388[39m
+2026-05-18 10:35:31 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:35:32 [32minfo[39m: [32mRouted to: MARKET[39m
+2026-05-18 10:35:32 [37mdebug[39m: [37mMarket Agent input: {"crop":"onion","nearbyMandis":[],"state":"Maharashtra","transportCostPerQuintal":50,"storageAvailable":true,"quantityQuintal":10,"harvestWindow":{"earliestDate":"2026-05-18","latestDate":"2026-05-25"}}[39m
+2026-05-18 10:35:32 [32minfo[39m: [32mFetching real mandi prices for onion[39m
+2026-05-18 10:35:33 [35mhttp[39m: [35mMandi API Response: 200 from https://api.data.gov.in/resource/9ef84268-d588-465a-a308-a864a43d0070 | Count: 0[39m
+2026-05-18 10:35:33 [37mdebug[39m: [37mFiltered to 0 specific records.[39m
+2026-05-18 10:35:33 [33mwarn[39m: [33mNo mandi records found for onion in [39m
+2026-05-18 10:35:33 [37mdebug[39m: [37mFound 0 records for onion[39m
+2026-05-18 10:35:33 [33mwarn[39m: [33mNo records from API, falling back to mock data[39m
+2026-05-18 10:35:33 [37mdebug[39m: [37mFetched 4 records for market analysis.[39m
+2026-05-18 10:35:33 [32minfo[39m: [32mMarket Agent analysis complete.[39m
+2026-05-18 10:35:33 [32minfo[39m: [32mMarket Agent call complete.[39m
+2026-05-18 10:35:33 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:35:34 [37mdebug[39m: [37mHumanized result: {"message":"Namaste Dikshit Rawal ji 🌾, MARKET system suggests selling your produce at Nanded mandi in Maharashtra 🚜. You can get a modal price of ₹7350 and net price after transport of ₹7300. Consider exploring this option for better earnings! 📈"}[39m
+2026-05-18 10:35:34 [32minfo[39m: [32mFinal Response : "Namaste Dikshit Rawal ji 🌾, MARKET system suggests selling your produce at Nanded mandi in Maharashtra 🚜. You can get a modal price of ₹7350 and net price after transport of ₹7300. Consider exploring this option for better earnings! 📈"[39m
+2026-05-18 10:35:34 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:35:34 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:36:28 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+14155551234 (raw: whatsapp:14155551234)[39m
+2026-05-18 10:36:28 [32minfo[39m: [32mReceived: "What is the weather?" from whatsapp:+14155551234[39m
+2026-05-18 10:36:28 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:36:29 [32minfo[39m: [32mRouted to: WEATHER[39m
+2026-05-18 10:36:33 [32minfo[39m: [32mWeather/Irrigation Agent call complete.[39m
+2026-05-18 10:36:33 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:36:34 [37mdebug[39m: [37mHumanized result: {"message":"Hi Dikshit Kumar 👋, apne khेत 🌾 mein irrigation 🚜 ke liye Wednesday shaam ko 4 ghante ke liye samay dein. Low rainfall aur dry spell ki wajah se yeh zaroori hai! 🌡️"}[39m
+2026-05-18 10:36:34 [32minfo[39m: [32mFinal Response : "Hi Dikshit Kumar 👋, apne khेत 🌾 mein irrigation 🚜 ke liye Wednesday shaam ko 4 ghante ke liye samay dein. Low rainfall aur dry spell ki wajah se yeh zaroori hai! 🌡️"[39m
+2026-05-18 10:36:34 [32minfo[39m: [32mReplying via TwiML to whatsapp:+14155551234...[39m
+2026-05-18 10:36:34 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:38:55 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:38:55 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1779079733844" from whatsapp:+918426014388[39m
+2026-05-18 10:38:55 [33mwarn[39m: [33minfo[39m
+2026-05-18 10:38:55 [31merror[39m: [31mError reading profiles: SyntaxError: Unexpected end of JSON input[39m
+2026-05-18 10:38:55 [33mwarn[39m: [33mFailed to link account, profile not found for ID: web-1779079733844[39m
+2026-05-18 10:38:55 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:38:55 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:39:39 [31merror[39m: [31mError updating profile: SyntaxError: Unexpected end of JSON input[39m
+2026-05-18 10:39:49 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:39:49 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1779080979379" from whatsapp:+918426014388[39m
+2026-05-18 10:39:49 [33mwarn[39m: [33minfo[39m
+2026-05-18 10:39:49 [31merror[39m: [31mError reading profiles: SyntaxError: Unexpected end of JSON input[39m
+2026-05-18 10:39:49 [33mwarn[39m: [33mFailed to link account, profile not found for ID: web-1779080979379[39m
+2026-05-18 10:39:49 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:39:49 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:40:48 [32minfo[39m: [32mfilepath[39m
+2026-05-18 10:40:48 [32minfo[39m: [32mLoading config from: /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-18 10:40:48 [32minfo[39m: [32mSuccessfully loaded /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-18 10:40:48 [32minfo[39m: [32mServer is running on http://localhost:5050[39m
+2026-05-18 10:40:59 [32minfo[39m: [32mProfile updated for web-1779080973979: {"name":"Dikshit Rawal","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:41:32 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp: 918426014388)[39m
+2026-05-18 10:41:32 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1779080973979" from whatsapp:+918426014388[39m
+2026-05-18 10:41:32 [33mwarn[39m: [33minfo[39m
+2026-05-18 10:41:32 [32minfo[39m: [32mProfile updated for whatsapp:+918426014388: {"name":"Dikshit Rawal","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:41:32 [32minfo[39m: [32mSuccessfully linked web account for Dikshit Rawal to WhatsApp number whatsapp:+918426014388[39m
+2026-05-18 10:41:32 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:41:32 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:42:12 [32minfo[39m: [32mProfile updated for web-1779081132462: {"name":"dikshit kumar","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:42:21 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:42:21 [32minfo[39m: [32mReceived: "LINK_WEB_ACCOUNT_web-1779081132462" from whatsapp:+918426014388[39m
+2026-05-18 10:42:21 [33mwarn[39m: [33minfo[39m
+2026-05-18 10:42:21 [32minfo[39m: [32mProfile updated for whatsapp:+918426014388: {"name":"dikshit kumar","location":"Vadodara (391760)","pincode":"391760"}[39m
+2026-05-18 10:42:21 [32minfo[39m: [32mSuccessfully linked web account for dikshit kumar to WhatsApp number whatsapp:+918426014388[39m
+2026-05-18 10:42:21 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:42:21 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:42:36 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:42:36 [32minfo[39m: [32mReceived: "hindi mai baat kro" from whatsapp:+918426014388[39m
+2026-05-18 10:42:36 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:42:37 [32minfo[39m: [32mRouted to: GENERAL[39m
+2026-05-18 10:42:37 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:42:37 [32minfo[39m: [32mGeneral Agent Result: {"message":"Namaste dikshit kumar ji, main aapki madad ke liye yahaan hoon. Aap Vadodara se hain, main aapki kisi bhi krishi sambandhit samasya ka samadhan karne ke liye taiyaar hoon."}[39m
+2026-05-18 10:42:37 [32minfo[39m: [32mFinal Response (General): Namaste dikshit kumar ji, main aapki madad ke liye yahaan hoon. Aap Vadodara se hain, main aapki kisi bhi krishi sambandhit samasya ka samadhan karne ke liye taiyaar hoon.[39m
+2026-05-18 10:42:37 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:42:37 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:43:11 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:43:11 [32minfo[39m: [32mReceived: "es mansoon muje kya krna chaiye" from whatsapp:+918426014388[39m
+2026-05-18 10:43:11 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:43:12 [32minfo[39m: [32mRouted to: GENERAL[39m
+2026-05-18 10:43:12 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:43:13 [32minfo[39m: [32mGeneral Agent Result: {"message":"Mansoon ke mausam mein, aapko apni zameen ki taiyaari karni chahiye. Ismein zameen ka hal, beej lagana, khad dena, aur pani ki vyavastha shamil hai. Aap kisano ke liye uplabdh yojnaon aur saman ki jaankari ke liye mujhse puch sakte hain."}[39m
+2026-05-18 10:43:13 [32minfo[39m: [32mFinal Response (General): Mansoon ke mausam mein, aapko apni zameen ki taiyaari karni chahiye. Ismein zameen ka hal, beej lagana, khad dena, aur pani ki vyavastha shamil hai. Aap kisano ke liye uplabdh yojnaon aur saman ki jaankari ke liye mujhse puch sakte hain.[39m
+2026-05-18 10:43:13 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:43:13 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:44:08 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:44:08 [32minfo[39m: [32mReceived: "barish hogi abki baar or konsi fasal lagu" from whatsapp:+918426014388[39m
+2026-05-18 10:44:08 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:44:09 [32minfo[39m: [32mRouted to: CROP_PLANNING[39m
+2026-05-18 10:44:09 [33mwarn[39m: [33mMissing parameters: landAcres[39m
+2026-05-18 10:44:09 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:44:09 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-18 10:44:53 [32minfo[39m: [32mReceived /whatsapp request from: whatsapp:+918426014388 (raw: whatsapp:+918426014388)[39m
+2026-05-18 10:44:53 [32minfo[39m: [32mReceived: "thik hai yojana btao . mere pe bahot  sara laon ho rakha hai" from whatsapp:+918426014388[39m
+2026-05-18 10:44:53 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:44:55 [32minfo[39m: [32mRouted to: SCHEME[39m
+2026-05-18 10:44:55 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:44:57 [32minfo[39m: [32mScheme Agent call complete.[39m
+2026-05-18 10:44:57 [37mdebug[39m: [37mUsing GROQ provider[39m
+2026-05-18 10:44:58 [37mdebug[39m: [37mHumanized result: {"message":"Hi Dikshit Kumar 👋, from Vadodara (391760) 🌾! We have 2 useful schemes for you: 🚜 Gujarat Kisan Credit Card Scheme and Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) Scheme. For Gujarat Kisan Credit Card, you need: aadhar card, bank account, and land ownership documents. For PM-KISAN, you need: aadhar card, bank account, and land ownership documents. You can apply at nearest district cooperative bank or common service center. Check https://www.agri.gujarat.gov.in/ and https://pmkisan.gov.in/ for more info 📊"}[39m
+2026-05-18 10:44:58 [32minfo[39m: [32mFinal Response : "Hi Dikshit Kumar 👋, from Vadodara (391760) 🌾! We have 2 useful schemes for you: 🚜 Gujarat Kisan Credit Card Scheme and Pradhan Mantri Kisan Samman Nidhi (PM-KISAN) Scheme. For Gujarat Kisan Credit Card, you need: aadhar card, bank account, and land ownership documents. For PM-KISAN, you need: aadhar card, bank account, and land ownership documents. You can apply at nearest district cooperative bank or common service center. Check https://www.agri.gujarat.gov.in/ and https://pmkisan.gov.in/ for more info 📊"[39m
+2026-05-18 10:44:58 [32minfo[39m: [32mReplying via TwiML to whatsapp:+918426014388...[39m
+2026-05-18 10:44:58 [32minfo[39m: [32mMessage prepared successfully.[39m
+2026-05-26 16:17:06 [32minfo[39m: [32mfilepath[39m
+2026-05-26 16:17:06 [32minfo[39m: [32mLoading config from: /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-26 16:17:06 [32minfo[39m: [32mSuccessfully loaded /Users/dikshitrawal/Krishi_Co_backend/.env.development[39m
+2026-05-26 16:17:12 [32minfo[39m: [32mServer is running on http://localhost:5050[39m
+2026-05-26 16:20:48 [32minfo[39m: [32mProfile updated for web-1779792647509: {"name":"Dikshit Rawal","location":"Vadodara (391760)","pincode":"391760"}[39m
